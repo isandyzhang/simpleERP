@@ -1,0 +1,27 @@
+@page
+@model ProductsIndexModel
+@{
+    ViewData["Title"] = "商品";
+}
+<h1>商品</h1>
+<div class="actions"><a class="button" href="/Products/Edit">新增商品</a></div>
+<div class="card">
+    <table>
+        <thead>
+            <tr><th>編號</th><th>名稱</th><th>單位</th><th>溫層</th><th>短品名</th><th></th></tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Sku</td>
+                <td>@item.Name</td>
+                <td>@item.Unit</td>
+                <td>@SimpleErp.Services.Temps.Label(item.Temperature)</td>
+                <td>@item.ShortName</td>
+                <td><a href="/Products/Edit/@item.Id">修改</a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

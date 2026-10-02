@@ -1,0 +1,41 @@
+@page "{id?}"
+@model CustomerEditModel
+@{
+    ViewData["Title"] = "客戶";
+}
+<h1>@(string.IsNullOrEmpty(Model.Item.Id) ? "新增客戶" : "修改客戶")</h1>
+<div class="card">
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <p class="error">@Model.Error</p>
+    }
+    <form method="post">
+        <input type="hidden" asp-for="Item.Id" />
+        <div class="row">
+            <div>
+                <label>姓名</label>
+                <input asp-for="Item.Name" required />
+            </div>
+            <div>
+                <label>電話</label>
+                <input asp-for="Item.Phone" />
+            </div>
+        </div>
+        <label>地址（黑貓宅配用）</label>
+        <input asp-for="Item.Address" />
+        <div class="row">
+            <div>
+                <label>7-ELEVEN 門市代碼</label>
+                <input asp-for="Item.StoreId" />
+            </div>
+            <div>
+                <label>門市名稱</label>
+                <input asp-for="Item.StoreName" />
+            </div>
+        </div>
+        <div class="actions">
+            <button type="submit">儲存</button>
+            <a class="button secondary" href="/Customers">返回</a>
+        </div>
+    </form>
+</div>

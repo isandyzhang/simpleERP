@@ -1,0 +1,42 @@
+@page
+@model OrderCreateModel
+@{
+    ViewData["Title"] = "新增訂單";
+}
+<h1>新增訂單</h1>
+<div class="card">
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <p class="error">@Model.Error</p>
+    }
+    <form method="post">
+        <label>客戶</label>
+        <select name="customerId" required>
+            @foreach (var customer in Model.Customers)
+            {
+                <option value="@customer.Id">@customer.Name</option>
+            }
+        </select>
+        <label>備註</label>
+        <input name="note" />
+        <table>
+            <thead>
+                <tr><th>商品</th><th>可再賣</th><th>本次訂購</th></tr>
+            </thead>
+            <tbody>
+            @foreach (var row in Model.Stock)
+            {
+                <tr>
+                    <td>@row.Product.Name（@SimpleErp.Services.Temps.Label(row.Product.Temperature)）</td>
+                    <td>@row.Available</td>
+                    <td><input name="qty_@row.Product.Id" type="number" min="0" value="0" /></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <div class="actions">
+            <button type="submit">建立訂單</button>
+            <a class="button secondary" href="/Orders">返回</a>
+        </div>
+    </form>
+</div>

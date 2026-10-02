@@ -1,0 +1,63 @@
+@page
+@model StockIndexModel
+@{
+    ViewData["Title"] = "進貨";
+}
+<h1>進貨與調整</h1>
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <p class="error">@Model.Error</p>
+}
+<div class="row">
+    <form class="card" method="post" asp-page-handler="Receive">
+        <h2>進貨</h2>
+        <label>商品</label>
+        <select name="productId" required>
+            @foreach (var item in Model.Products)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+        <label>數量</label>
+        <input name="qty" type="number" min="1" required />
+        <label>備註</label>
+        <input name="note" />
+        <div class="actions"><button type="submit">入庫</button></div>
+    </form>
+    <form class="card" method="post" asp-page-handler="Adjust">
+        <h2>調整</h2>
+        <p class="muted">正數增加，負數減少。調整後在庫不能低於已承諾未出。</p>
+        <label>商品</label>
+        <select name="productId" required>
+            @foreach (var item in Model.Products)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+        <label>數量</label>
+        <input name="qty" type="number" required />
+        <label>備註</label>
+        <input name="note" />
+        <div class="actions"><button type="submit">調整</button></div>
+    </form>
+</div>
+<div class="card">
+    <h2>最近流水</h2>
+    <table>
+        <thead>
+            <tr><th>時間</th><th>商品</th><th>數量</th><th>原因</th><th>備註</th></tr>
+        </thead>
+        <tbody>
+        @foreach (var row in Model.Movements)
+        {
+            <tr>
+                <td>@SimpleErp.Services.Clock.Local(row.CreatedAt)</td>
+                <td>@row.Product.Name</td>
+                <td>@row.Quantity</td>
+                <td>@(row.Reason == "inbound" ? "進貨" : row.Reason == "shipment" ? "出貨" : "調整")</td>
+                <td>@row.Note</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - simpleERP</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <a class="brand" href="/">simpleERP</a>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <nav>
+                <a href="/">庫存</a>
+                <a href="/Products">商品</a>
+                <a href="/Stock">進貨</a>
+                <a href="/Customers">客戶</a>
+                <a href="/Orders">訂單</a>
+                <a href="/Settings">寄件設定</a>
+                <form method="post" action="/Logout">
+                    <button type="submit">登出</button>
+                </form>
+            </nav>
+        }
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+</body>
+</html>

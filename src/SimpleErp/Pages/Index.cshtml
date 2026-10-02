@@ -1,0 +1,51 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "庫存";
+}
+<h1>庫存</h1>
+<div class="card">
+    <table>
+        <thead>
+            <tr><th>商品</th><th>在庫</th><th>已承諾未出</th><th>可再賣</th></tr>
+        </thead>
+        <tbody>
+        @if (Model.Stock.Count == 0)
+        {
+            <tr><td colspan="4">還沒有商品。先到商品頁建立，再進貨。</td></tr>
+        }
+        @foreach (var row in Model.Stock)
+        {
+            <tr>
+                <td>@row.Product.Name <span class="muted">@row.Product.Unit</span></td>
+                <td>@row.OnHand</td>
+                <td>@row.Committed</td>
+                <td>@row.Available</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<h2>未完成訂單</h2>
+<div class="card">
+    <table>
+        <thead>
+            <tr><th>時間</th><th>客戶</th><th>狀態</th><th>已出 / 訂購</th></tr>
+        </thead>
+        <tbody>
+        @foreach (var order in Model.OpenOrders)
+        {
+            <tr>
+                <td>@SimpleErp.Services.Clock.Local(order.Order.CreatedAt)</td>
+                <td><a href="/Orders/Detail/@order.Order.Id">@order.Order.Customer.Name</a></td>
+                <td>@SimpleErp.Services.ErpService.OrderStatus(order)</td>
+                <td>@order.Shipped / @order.Ordered</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    @if (Model.OpenOrders.Count == 0)
+    {
+        <p class="muted">沒有未完成的訂單。</p>
+    }
+</div>

@@ -1,0 +1,138 @@
+@page "{id}"
+@model OrderDetailModel
+@{
+    ViewData["Title"] = "訂單";
+    var detail = Model.Detail!;
+}
+<h1>@detail.Order.Customer.Name</h1>
+<p>@SimpleErp.Services.ErpService.OrderStatus(detail.Summary)　訂購 @detail.Summary.Ordered　已出 @detail.Summary.Shipped　未出 @(detail.Summary.Cancelled ? 0 : detail.Summary.Remaining)</p>
+@if (!string.IsNullOrEmpty(detail.Order.Note))
+{
+    <p class="muted">@detail.Order.Note</p>
+}
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <p class="error">@Model.Error</p>
+}
+
+@if (detail.Summary.Remaining > 0)
+{
+    <form class="card" method="post" asp-page-handler="Ship">
+        <h2>出貨</h2>
+        <p class="muted">第一階段單號手動填。黑貓單不能拿去 7-11，交貨便 12 碼要到 ibon 手打。</p>
+        <label>方式</label>
+        <select name="channel">
+            <option value="tcat">官方契約（黑貓，宅配到地址）</option>
+            <option value="unimart_c2c">產生代碼（7-ELEVEN，店到店）</option>
+        </select>
+        <table>
+            <thead>
+                <tr><th>商品</th><th>未出</th><th>本次出貨</th></tr>
+            </thead>
+            <tbody>
+            @foreach (var line in detail.Lines.Where(x => x.Remaining > 0))
+            {
+                <tr>
+                    <td>@line.Line.Product.Name</td>
+                    <td>@line.Remaining</td>
+                    <td><input name="qty_@line.Line.Id" type="number" min="0" max="@line.Remaining" value="0" /></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <div class="row">
+            <div>
+                <label>收件人</label>
+                <input name="recipientName" value="@detail.Order.Customer.Name" required />
+            </div>
+            <div>
+                <label>電話</label>
+                <input name="recipientPhone" value="@detail.Order.Customer.Phone" />
+            </div>
+        </div>
+        <label>地址（黑貓）</label>
+        <input name="recipientAddress" value="@detail.Order.Customer.Address" />
+        <div class="row">
+            <div>
+                <label>門市代碼（7-ELEVEN）</label>
+                <input name="storeId" value="@detail.Order.Customer.StoreId" />
+            </div>
+            <div>
+                <label>門市名稱</label>
+                <input name="storeName" value="@detail.Order.Customer.StoreName" />
+            </div>
+        </div>
+        <label>黑貓託運單號或交貨便 12 碼（可先留空）</label>
+        <input name="tracking" />
+        <div class="actions"><button type="submit">確認出貨並扣庫存</button></div>
+    </form>
+}
+
+<div class="card">
+    <h2>出貨紀錄</h2>
+    @if (detail.Shipments.Count == 0)
+    {
+        <p class="muted">還沒出貨。</p>
+    }
+    @foreach (var shipment in detail.Shipments)
+    {
+        <article>
+            <p>
+                @SimpleErp.Services.Clock.Local(shipment.CreatedAt)
+                @SimpleErp.Services.Channels.Label(shipment.Channel)
+                @SimpleErp.Services.Temps.Label(shipment.Temperature)
+                @SimpleErp.Services.ErpService.ShipmentStatus(shipment)
+            </p>
+            <p>收件：@shipment.RecipientName @shipment.RecipientPhone</p>
+            @if (shipment.Channel == "tcat")
+            {
+                <p>地址：@shipment.RecipientAddress</p>
+                @if (!string.IsNullOrEmpty(shipment.TcatWaybillNo))
+                {
+                    <p class="big">@shipment.TcatWaybillNo</p>
+                    <p><a href="https://www.t-cat.com.tw/Inquire/TraceDetail.aspx?BillID=@shipment.TcatWaybillNo" target="_blank" rel="noreferrer">黑貓查貨</a></p>
+                }
+            }
+            else
+            {
+                <p>門市：@shipment.StoreId @shipment.StoreName</p>
+                @if (!string.IsNullOrEmpty(shipment.CvsCode))
+                {
+                    <p class="big">@shipment.CvsCode</p>
+                    <p class="muted">到 ibon：購物／寄貨 → 交貨便 → 寄件 → 代碼輸入。</p>
+                }
+            }
+            <p>
+                @string.Join("、", shipment.Lines.Select(x =>
+                {
+                    var line = detail.Lines.Single(y => y.Line.Id == x.OrderLineId);
+                    return $"{line.Line.Product.Name} {x.Quantity}";
+                }))
+            </p>
+            @if (shipment.Status != "done")
+            {
+                <form method="post" asp-page-handler="Track">
+                    <input type="hidden" name="shipmentId" value="@shipment.Id" />
+                    <label>補單號或 12 碼</label>
+                    <input name="tracking" value="@SimpleErp.Services.ErpService.Reference(shipment)" />
+                    <div class="actions">
+                        <button type="submit">儲存單號</button>
+                    </div>
+                </form>
+                <form method="post" asp-page-handler="Done">
+                    <input type="hidden" name="shipmentId" value="@shipment.Id" />
+                    <button class="secondary" type="submit">標成已完成</button>
+                </form>
+            }
+        </article>
+        <hr />
+    }
+</div>
+
+@if (detail.Order.CancelledAt is null && detail.Summary.Remaining > 0)
+{
+    <form method="post" asp-page-handler="Cancel">
+        <button class="secondary" type="submit">取消還沒出的數量</button>
+    </form>
+}
+<p class="actions"><a class="button secondary" href="/Orders">返回訂單</a></p>

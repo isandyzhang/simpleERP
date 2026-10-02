@@ -1,0 +1,26 @@
+@page
+@model CustomersIndexModel
+@{
+    ViewData["Title"] = "客戶";
+}
+<h1>客戶</h1>
+<div class="actions"><a class="button" href="/Customers/Edit">新增客戶</a></div>
+<div class="card">
+    <table>
+        <thead>
+            <tr><th>姓名</th><th>電話</th><th>地址</th><th>取貨門市</th><th></th></tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Phone</td>
+                <td>@item.Address</td>
+                <td>@item.StoreId @item.StoreName</td>
+                <td><a href="/Customers/Edit/@item.Id">修改</a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

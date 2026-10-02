@@ -1,0 +1,27 @@
+@page
+@model OrdersIndexModel
+@{
+    ViewData["Title"] = "訂單";
+}
+<h1>訂單</h1>
+<div class="actions"><a class="button" href="/Orders/Create">新增訂單</a></div>
+<div class="card">
+    <table>
+        <thead>
+            <tr><th>時間</th><th>客戶</th><th>狀態</th><th>訂購</th><th>已出</th><th>未出</th></tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@SimpleErp.Services.Clock.Local(item.Order.CreatedAt)</td>
+                <td><a href="/Orders/Detail/@item.Order.Id">@item.Order.Customer.Name</a></td>
+                <td>@SimpleErp.Services.ErpService.OrderStatus(item)</td>
+                <td>@item.Ordered</td>
+                <td>@item.Shipped</td>
+                <td>@(item.Cancelled ? 0 : item.Remaining)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

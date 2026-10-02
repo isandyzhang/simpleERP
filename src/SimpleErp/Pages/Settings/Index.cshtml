@@ -1,0 +1,42 @@
+@page
+@model SettingsIndexModel
+@{
+    ViewData["Title"] = "寄件設定";
+}
+<h1>寄件設定</h1>
+@if (Model.Saved)
+{
+    <p class="ok">已儲存。</p>
+}
+<div class="card">
+    <p class="muted">授權碼和綠界金鑰不要寫在這裡。第一階段出貨單號手動填。</p>
+    <form method="post">
+        <div class="row">
+            <div>
+                <label>寄件人姓名</label>
+                <input asp-for="Item.SenderName" />
+            </div>
+            <div>
+                <label>電話</label>
+                <input asp-for="Item.SenderPhone" />
+            </div>
+            <div>
+                <label>手機（09 開頭，交貨便用）</label>
+                <input asp-for="Item.SenderMobile" />
+            </div>
+        </div>
+        <label>地址</label>
+        <input asp-for="Item.SenderAddress" />
+        <div class="row">
+            <div>
+                <label>黑貓契客代號</label>
+                <input asp-for="Item.TcatCustomerId" />
+            </div>
+            <div>
+                <label>綠界商店代號</label>
+                <input asp-for="Item.EcpayMerchantId" />
+            </div>
+        </div>
+        <div class="actions"><button type="submit">儲存</button></div>
+    </form>
+</div>

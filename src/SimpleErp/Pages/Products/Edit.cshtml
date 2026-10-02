@@ -1,0 +1,46 @@
+@page "{id?}"
+@model ProductEditModel
+@{
+    ViewData["Title"] = "商品";
+}
+<h1>@(string.IsNullOrEmpty(Model.Item.Id) ? "新增商品" : "修改商品")</h1>
+<div class="card">
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <p class="error">@Model.Error</p>
+    }
+    <form method="post">
+        <input type="hidden" asp-for="Item.Id" />
+        <div class="row">
+            <div>
+                <label>編號</label>
+                <input asp-for="Item.Sku" required />
+            </div>
+            <div>
+                <label>名稱</label>
+                <input asp-for="Item.Name" required />
+            </div>
+            <div>
+                <label>單位</label>
+                <select asp-for="Item.Unit">
+                    <option>盒</option>
+                    <option>瓶</option>
+                </select>
+            </div>
+            <div>
+                <label>溫層</label>
+                <select asp-for="Item.Temperature">
+                    <option value="ambient">常溫</option>
+                    <option value="chilled">冷藏</option>
+                    <option value="frozen">冷凍</option>
+                </select>
+            </div>
+        </div>
+        <label>託運單短品名（最多 20 字）</label>
+        <input asp-for="Item.ShortName" maxlength="20" />
+        <div class="actions">
+            <button type="submit">儲存</button>
+            <a class="button secondary" href="/Products">返回</a>
+        </div>
+    </form>
+</div>

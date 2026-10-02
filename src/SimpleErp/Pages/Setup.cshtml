@@ -1,0 +1,21 @@
+@page
+@model SetupModel
+@{
+    ViewData["Title"] = "建立帳號";
+}
+<h1>建立賣家帳號</h1>
+<div class="card">
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <p class="error">@Model.Error</p>
+    }
+    <form method="post">
+        <label>帳號</label>
+        <input asp-for="UserName" autocomplete="username" required />
+        <label>密碼</label>
+        <input asp-for="Password" type="password" autocomplete="new-password" required />
+        <label>再輸入一次密碼</label>
+        <input asp-for="Confirm" type="password" autocomplete="new-password" required />
+        <div class="actions"><button type="submit">建立並登入</button></div>
+    </form>
+</div>

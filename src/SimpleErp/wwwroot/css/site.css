@@ -1,0 +1,73 @@
+:root {
+  color-scheme: light;
+  --ink: #241c16;
+  --muted: #6d6258;
+  --line: #e4d8cc;
+  --paper: #fbf7f2;
+  --card: #fffdf9;
+  --accent: #8c3d1e;
+  --accent-2: #f3e2d4;
+  --ok: #1f6b45;
+  --warn: #8a5a12;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+a { color: var(--accent); }
+header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 24px;
+  background: #2b211b;
+  color: #fffaf5;
+}
+header a { color: #fffaf5; text-decoration: none; }
+.brand { font-weight: 700; letter-spacing: 0.04em; }
+nav { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+nav form { margin: 0; }
+main { max-width: 980px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { font-size: 1.6rem; margin: 0 0 16px; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 0.85rem; }
+label { display: block; margin: 10px 0 4px; color: var(--muted); font-size: 0.9rem; }
+input, select, textarea, button {
+  font: inherit;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d9cbbd;
+}
+input, select, textarea { width: 100%; background: white; color: var(--ink); }
+textarea { min-height: 72px; }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+button, .button {
+  background: var(--accent);
+  color: white;
+  border: 0;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+}
+button.secondary, .button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+header button { background: transparent; color: #fffaf5; border: 1px solid #8d7768; width: auto; }
+.error { background: #fde8e4; color: #8a2418; padding: 10px 12px; border-radius: 8px; }
+.ok { color: var(--ok); }
+.warn { color: var(--warn); }
+.big { font-size: 1.8rem; letter-spacing: 0.12em; font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.inline { width: auto; }

@@ -1,0 +1,19 @@
+@page
+@model LoginModel
+@{
+    ViewData["Title"] = "登入";
+}
+<h1>登入</h1>
+<div class="card">
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <p class="error">@Model.Error</p>
+    }
+    <form method="post">
+        <label>帳號</label>
+        <input asp-for="UserName" autocomplete="username" required />
+        <label>密碼</label>
+        <input asp-for="Password" type="password" autocomplete="current-password" required />
+        <div class="actions"><button type="submit">登入</button></div>
+    </form>
+</div>

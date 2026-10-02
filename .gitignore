@@ -4,3 +4,9 @@
 .wrangler/
 node_modules/
 dist/
+/data/
+publish/
+*.db
+*.db-*
+[Bb]in/
+[Oo]bj/
